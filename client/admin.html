@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio Management Dashboard | Shaik Arshiya Begum</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+  <!-- Header Bar -->
+  <header class="admin-header">
+    <div class="admin-brand">
+      <img src="assets/favicon.svg" width="30" height="30" alt="Logo">
+      <span>Admin</span>
+      <div>Shaik Arshiya Begum Portfolio</div>
+    </div>
+    <div class="admin-controls">
+      <div id="system-status-badge" class="status-badge offline">
+        ● Connecting...
+      </div>
+      <a href="/" class="btn-admin btn-admin-secondary" target="_blank">View Live Site &nearr;</a>
+      <button id="logout-btn" class="btn-admin btn-admin-secondary">Lock Session</button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="admin-container">
+    <div class="admin-top-bar">
+      <div>
+        <h1>Projects Manager</h1>
+        <p style="color: var(--text-sub); margin-top: 4px;">Add, edit, or delete portfolio projects stored in MongoDB Atlas.</p>
+      </div>
+      <button id="open-add-modal-btn" class="btn-admin btn-admin-primary">
+        <span>+ Add New Project</span>
+      </button>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="admin-stats-grid">
+      <div class="stat-card">
+        <span>Total Projects</span>
+        <h3 id="stat-total-projects">-</h3>
+      </div>
+      <div class="stat-card">
+        <span>Database Mode</span>
+        <h3 id="stat-db-info" style="font-size: 1.25rem; font-weight: 600; margin-top: 10px;">Checking...</h3>
+      </div>
+      <div class="stat-card">
+        <span>API Protection</span>
+        <h3 style="font-size: 1.25rem; font-weight: 600; margin-top: 10px; color: #34d399;">x-admin-key Active</h3>
+      </div>
+    </div>
+
+    <!-- Projects Table Card -->
+    <div class="table-card">
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th style="width: 70px;">Preview</th>
+              <th>Project Details</th>
+              <th>Technologies</th>
+              <th style="width: 100px;">Status</th>
+              <th style="width: 150px;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="admin-projects-tbody">
+            <tr>
+              <td colspan="5" style="text-align: center; padding: 30px;">Loading projects...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- Add / Edit Project Modal -->
+  <div id="project-modal" class="modal-overlay">
+    <div class="modal-dialog">
+      <h2 id="modal-title">Add New Project</h2>
+      <form id="project-form">
+        <div class="admin-form-group">
+          <label for="proj-title">Project Title *</label>
+          <input type="text" id="proj-title" class="admin-input" placeholder="e.g. AI Plant Disease Classifier" required>
+        </div>
+
+        <div class="admin-form-group">
+          <label for="proj-desc">Description *</label>
+          <textarea id="proj-desc" class="admin-textarea" placeholder="Detailed summary of the project, problem solved, and architecture..." required></textarea>
+        </div>
+
+        <div class="admin-form-group">
+          <label for="proj-tech">Tech Stack (comma separated) *</label>
+          <input type="text" id="proj-tech" class="admin-input" placeholder="e.g. Python, TensorFlow, Flask, Docker" required>
+        </div>
+
+        <div class="admin-form-group">
+          <label for="proj-github">GitHub Repository URL</label>
+          <input type="url" id="proj-github" class="admin-input" placeholder="https://github.com/Arshiya-8055/repo">
+        </div>
+
+        <div class="admin-form-group">
+          <label for="proj-live">Live Demo URL</label>
+          <input type="text" id="proj-live" class="admin-input" placeholder="https://yourdemo.vercel.app or #">
+        </div>
+
+        <div class="admin-form-group">
+          <label for="proj-image">Cover Image Path / URL</label>
+          <input type="text" id="proj-image" class="admin-input" placeholder="assets/projects/academic.svg or https://...">
+        </div>
+
+        <div class="admin-form-group" style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+          <input type="checkbox" id="proj-featured" style="width: 18px; height: 18px; cursor: pointer;">
+          <label for="proj-featured" style="margin: 0; cursor: pointer;">Feature on homepage spotlight</label>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" id="modal-cancel-btn" class="btn-admin btn-admin-secondary">Cancel</button>
+          <button type="submit" class="btn-admin btn-admin-primary">Save Project</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Authentication Unlock Gate -->
+  <div id="auth-gate">
+    <div class="auth-card">
+      <img src="assets/favicon.svg" width="54" height="54" alt="SA Logo" style="margin-bottom: 16px;">
+      <h2>Admin Unlock</h2>
+      <p>Enter your <code>ADMIN_KEY</code> to access project management controls.</p>
+      
+      <div id="auth-error" style="display: none; background: rgba(239, 68, 68, 0.15); color: #f87171; padding: 10px; border-radius: 6px; margin-bottom: 16px; font-size: 0.88rem;"></div>
+
+      <form id="auth-form">
+        <div class="admin-form-group">
+          <input type="password" id="admin-key-input" class="admin-input" placeholder="Enter ADMIN_KEY" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="btn-admin btn-admin-primary" style="width: 100%; justify-content: center; margin-top: 10px;">Unlock Dashboard</button>
+      </form>
+      <div style="margin-top: 20px;">
+        <a href="/" style="font-size: 0.85rem; color: var(--text-sub); text-decoration: underline;">&larr; Return to Portfolio</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
